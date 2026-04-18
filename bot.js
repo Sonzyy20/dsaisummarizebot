@@ -4,6 +4,7 @@ import summarizeText from "./openai.js";
 
 const { env } = process;
 import { Client, GatewayIntentBits, Events } from "discord.js"
+import { json } from "express";
 
 const client = new Client ({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]});
 client.on(Events.ClientReady, readyClient => {
@@ -26,6 +27,14 @@ client.on(Events.InteractionCreate, async interaction => {
     const summary = await summarizeText(text);
 
     await interaction.editReply(summary);
+  }
+
+  if (interaction.commandName === "checkuserid"){
+    const user = interaction.options.getMember("user")
+    await interaction.deferReply()
+    console.log(JSON.stringify(user, null ,2))
+    await interaction.editReply(JSON.stringify(user, null, 2));
+    console.log(user.voice.channel)
   }
 });
 
